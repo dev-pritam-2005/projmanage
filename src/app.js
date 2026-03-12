@@ -17,9 +17,14 @@ app.use(cors({
 }))
 
 
+//import health check router
+
+import healthCheckRouter from "./routes/healthcheck.routes.js";
+
+app.use("/api/v1/healthcheck",healthCheckRouter)
 
 app.get("/",(req,res)=>{
-    res.send(" hiii");
+    res.send(" welcome to pd,s server");
 })
 export default app;
 
