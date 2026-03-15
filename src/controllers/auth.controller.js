@@ -1,4 +1,4 @@
-import { User } from "../models/user.models";
+import { User } from "../models/user.models.js";
 import { ApiResponse } from "../utils/api-response.js";
 import {ApiError} from "../utils/api-error.js"
 import { asyncHandler } from "../utils/async-handler.js";
@@ -13,7 +13,7 @@ const generateAccessAndRefreshTokens= async(userId)=>{
 
         user.refreshToken = refreshToken;
         await user.save({validateBeforeSave:false})
-        return(accessToken,refreshToken)
+        return { accessToken, refreshToken }
 
     } catch (error) {
         throw new ApiError(500,"somthing went wrong while generating accesToken")
@@ -24,12 +24,15 @@ const generateAccessAndRefreshTokens= async(userId)=>{
 const registerUser = asyncHandler(async(req,res)=>{
     const {email,username,password,role} = req.body;
 
-   const existedUser = await username.findOne({
+   const existedUser = await User.findOne({
     $or:[{username},{email}]
    })
 
    if(existedUser){
-    throw new ApiError(409,"user with this email or username already exsist",[]);
+    return res.status(409).json({
+  success:false,
+  message:"User with this email or username already exists"
+})
    }
 
    const user = await User.create({
@@ -54,7 +57,7 @@ const registerUser = asyncHandler(async(req,res)=>{
             `${req.protocol}://${req.get("host")}/api/v1/users/verify-email/${unHashedToken}`
         )
     });
-    const createUser   = await user.findById(user._id).seclect("-password -refreshToken -emailVerificationToken -emailVerificationExpiry")
+    const createUser   = await User.findById(user._id).select("-password -refreshToken -emailVerificationToken -emailVerificationExpiry")
 
     if(!createUser){
         throw new ApiError(500,"somthing went wrong while registering a user")

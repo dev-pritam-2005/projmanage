@@ -12,11 +12,11 @@ const sendEmail =async (options)=>{
     });
 
     const emailTextual = mailGenerator.generatePlaintext(options.mailgenContent);
-    const emailHtml = mailGenerator.generatePlaintext(options.mailgenContent);
+    const emailHtml = mailGenerator.generate(options.mailgenContent);
 
 
     const transporter = nodemailer.createTransport({
-        host : process.env.MAILTRAP_SMPT_HOST,
+        host : process.env.MAILTRAP_SMTP_HOST,
         port : process.env.MAILTRAP_SMTP_PORT,
         auth :{
             user: process.env.MAILTRAP_SMTP_USER,
@@ -54,7 +54,7 @@ const emailVerificationMailgenContent=(username,verificationUrl)=>{
             action :{
                 instruction: "to verify ur email plaese click the  button",
                 button:{
-                    Color:" #45057e",
+                    color:" #45057e",
                     text: "click here",
                     link: verificationUrl
                 },
@@ -71,7 +71,7 @@ const forgotPasswordMailgenContent=(username,passwordUrl)=>{
             action :{
                 instruction: "to verify ur email plaese click the  button",
                 button:{
-                    Color:" #22BC66",
+                    color:" #22BC66",
                     text: "click here",
                     link: passwordUrl
                 },
