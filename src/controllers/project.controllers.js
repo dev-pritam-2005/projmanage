@@ -64,6 +64,17 @@ const getProject = asyncHandler(async(req,res)=>{
 
 })
 const  getProjectById = asyncHandler(async(req,res)=>{
+    const {projectId} = req.params
+    const project =  await Project.findById(projectId)
+
+
+    if(!project){
+        throw new ApiError(404,"project not found")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200,project,"project fetched successfully")
+    )
     //test
 })
 const createProject = asyncHandler(async(req,res)=>{
@@ -127,6 +138,34 @@ const deleteProject = asyncHandler(async(req,res)=>{
         )
 })
 const addMembersToProject = asyncHandler(async(req,res)=>{
+
+    const {email,role} = req.body
+    const {projectId} =req.params
+
+    const user = await Project.findOne({email})
+    if(!user){
+        throw new ApiError(404, "user does not exsist")
+    }
+
+    await ProjectMember.findByIdAndDelete(
+        {
+            user: new mongoose.Types.ObjectId(user._id),
+            project: new mongoose.Types.ObjectId(projectId)
+        },
+        {
+            user: new mongoose.Types.ObjectId(user._id),
+            project: new mongoose.Types.ObjectId(projectId),
+            role: role
+        },
+        {
+            new: true,
+            upsert:true
+        }
+    )
+
+    return res.status(200).json(
+        new ApiResponse(200,{},"project member added successfully") 
+    )
     //test
 })
 const getProjectMembers = asyncHandler(async(req,res)=>{
