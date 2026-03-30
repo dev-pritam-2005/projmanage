@@ -60,7 +60,35 @@ const userResetForgotPasswordValidator = () => {
 };
 
 
+const createProjectValidator = ()=>{
+    return [
+        body("name")
+            .notEmpty()
+            .withMessage("name is requaired"),
+        body("description").optional() 
+    ]
+}
+
+
+const addMembertoProjectValidator =()=>{
+     return [
+    body("email")
+      .trim()
+      .notEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Email is invalid"),
+    body("role")
+      .notEmpty()
+      .withMessage("Role is required")
+      .isIn(AvailableUserRole)
+      .withMessage("Role is invalid"),
+  ];
+}
+
 
 export{
-    userRegisterValidator,userLoginValidator,userChangeCurrentPasswordValidator,userForgotPasswordValidator,userResetForgotPasswordValidator
+    userRegisterValidator,userLoginValidator,userChangeCurrentPasswordValidator,userForgotPasswordValidator,userResetForgotPasswordValidator,
+    createProjectValidator,
+    addMembertoProjectValidator
 }
