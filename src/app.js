@@ -35,7 +35,7 @@ app.use("/api/v1/projectRouter",projectRouter)
 
 
 app.get("/",(req,res)=>{
-    res.send(" welcome to pd,s server");
+    res.send("hi hello ");
 })
 export default app;
 
